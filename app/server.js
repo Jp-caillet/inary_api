@@ -38,6 +38,9 @@ module.exports = class Server {
      */
     routes() {
 
+        new routes.user.UserCreate(this.app)
+        new routes.user.UserShows(this.app)
+
         // If route not exist
         this.app.use((req, res) => {
             res.status(404).json({
