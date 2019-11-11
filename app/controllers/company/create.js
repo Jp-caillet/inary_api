@@ -24,9 +24,9 @@ module.exports = class Create {
      * Middleware
      */
     middleware() {
-        this.app.post('/user/create', validator.express(check), async(req, res) => {
+        this.app.post('/company/create', validator.express(check), async(req, res) => {
             try {
-                const userCheck = `select * from etudiants where mail = '${req.body.mail}'`
+                const userCheck = `select * from entreprise where mail = '${req.body.mail}'`
                 let result = await db.promise().query(userCheck)
                 if (result[0].length !== 0) {
                     res.status(401).json({
@@ -34,19 +34,19 @@ module.exports = class Create {
                         message: 'user already exist'
                     })
                 } else {
-                    const userCreate = `INSERT INTO etudiants (mail, mdp)` +
+                    const userCreate = `INSERT INTO entreprise (mail, mdp)` +
                         `VALUES (` +
                         `'${req.body.mail}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}')`
 
                     result = await db.promise().query(userCreate)
 
-                    const user = `select * from etudiants where mail = '${req.body.mail}' `
+                    const user = `select * from entreprise where mail = '${req.body.mail}' `
                     result = await db.promise().query(user)
                     const toto = {
                         token: jwt.sign({
                                 mail: result[0][0].mail,
                                 mdp: result[0][0].mdp,
-                                entreprise: false,
+                                entreprise: true,
                                 _id: result[0][0].id
                             },
                             process.env.KEY_TOKEN)

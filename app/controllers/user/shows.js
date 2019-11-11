@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 // Core
 const check = validator.isObject()
 
-module.exports = class Create {
+module.exports = class Shows {
     constructor(app) {
         dotenv.config()
 
@@ -42,8 +42,8 @@ module.exports = class Create {
                 res.status(200).json(toto)
             } catch (e) {
 
-                console.log('create user')
-                console.error(`[ERROR] user/create -> ${e}`)
+                console.log('Shows user')
+                console.error(`[ERROR] user/Shows -> ${e}`)
                 res.status(400).json({
                     code: 400,
                     message: 'Bad request'

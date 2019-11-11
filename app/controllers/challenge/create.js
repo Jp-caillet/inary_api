@@ -24,7 +24,7 @@ module.exports = class Create {
      * Middleware
      */
     middleware() {
-        this.app.post('/user/create', validator.express(check), async(req, res) => {
+        this.app.post('/challenge/create', validator.express(check), async(req, res) => {
             try {
                 const userCheck = `select * from etudiants where mail = '${req.body.mail}'`
                 let result = await db.promise().query(userCheck)
@@ -46,7 +46,6 @@ module.exports = class Create {
                         token: jwt.sign({
                                 mail: result[0][0].mail,
                                 mdp: result[0][0].mdp,
-                                entreprise: false,
                                 _id: result[0][0].id
                             },
                             process.env.KEY_TOKEN)
