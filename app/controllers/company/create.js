@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken')
 const check = validator.isObject()
     .withRequired('nom', validator.isString())
     .withRequired('siren', validator.isString())
-    .withRequired('email', validator.isString())
+    .withRequired('telephone', validator.isString())
     .withRequired('email', validator.isString())
     .withRequired('mdp', validator.isString())
 
@@ -29,7 +29,7 @@ module.exports = class Create {
     middleware() {
         this.app.post('/company/create', validator.express(check), async(req, res) => {
             try {
-                const userCheck = `select * from entreprise where email = '${req.body.email}'`
+                const userCheck = `select * from entreprises where email = '${req.body.email}'`
                 let result = await db.promise().query(userCheck)
                 if (result[0].length !== 0) {
                     res.status(401).json({
@@ -37,18 +37,18 @@ module.exports = class Create {
                         message: 'user already exist'
                     })
                 } else {
-                    const userCreate = `INSERT INTO entreprise (email, mdp)` +
+                    const userCreate = `INSERT INTO entreprises (email, mdp, nom, siren, telephone)` +
                         `VALUES (` +
-                        `'${req.body.email}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}')`
+                        `'${req.body.email}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}', '${req.body.nom}', '${req.body.siren}' , '${req.body.telephone}'  )`
 
                     result = await db.promise().query(userCreate)
 
-                    const user = `select * from entreprise where email = '${req.body.email}' `
+                    const user = `select * from entreprises where email = '${req.body.email}' `
                     result = await db.promise().query(user)
                     const toto = {
                         token: jwt.sign({
+                                nom: result[0][0].nom,
                                 email: result[0][0].email,
-                                mdp: result[0][0].mdp,
                                 entreprise: true,
                                 _id: result[0][0].id
                             },
