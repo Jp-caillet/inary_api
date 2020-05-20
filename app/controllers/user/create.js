@@ -29,8 +29,8 @@ module.exports = class Create {
                 const userCheck = `select * from etudiants where mail = '${req.body.mail}'`
                 let result = await db.promise().query(userCheck)
                 if (result[0].length !== 0) {
-                    res.status(401).json({
-                        code: 401,
+                    res.status(200).json({
+                        code: 200,
                         message: 'user already exist'
                     })
                 } else {

@@ -32,15 +32,15 @@ module.exports = class Login {
                 const user = result[0][0]
 
                 if (result[0].length === 0) {
-                    return res.status(401).json({
-                        code: 401,
+                    return res.status(200).json({
+                        code: 200,
                         message: 'Authentication failed. User not found.',
                         auth: false
                     })
                 }
                 if (!bcrypt.compareSync(req.body.mdp, user.mdp)) {
-                    return res.status(401).json({
-                        code: 401,
+                    return res.status(200).json({
+                        code: 200,
                         message: 'Authentication failed. Wrong password.',
                         auth: false
                     })
