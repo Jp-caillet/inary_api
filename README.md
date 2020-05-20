@@ -21,8 +21,11 @@ Body :
 	"nom": "inary",
 	"siren": "ibhckjucbn",
 	"telephone": "0664809122",
-	"email": "jp78920@hotmail.com",
-	"mdp": "test"
+	"email": "toto",
+	"mdp": "test",
+	"voie": "2 rue de lhermitage",
+	"ville": "Ecquevilly",
+	"CP": "78920"
 }
 
 Response : 
@@ -67,4 +70,21 @@ wrong password
     "code": 401,
     "message": "Authentication failed. Wrong password.",
     "auth": false
+}
+
+## Post :  /adresses/create
+
+body : 
+{
+	"voie": "2 rue de lhermitage",
+	"ville": "Ecquevilly",
+	"CP": "78920"
+}
+
+Response : 
+{
+    "id": 11,
+    "voie": "2 rue de lhermitage",
+    "ville": "Ecquevilly",
+    "code_postal": "78920"
 }

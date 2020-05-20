@@ -28,23 +28,19 @@ module.exports = class Create {
         this.app.post('/adresses/create', validator.express(check), async(req, res) => {
             try {
                 
-                const addrCreate = `INSERT INTO entreprises (voie, ville, CP)` +
+                const addrCreate = `INSERT INTO adresses (voie, ville, code_postal)` +
                     `VALUES (` +
-                    `'${req.body.email}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}', '${req.body.nom}', '${req.body.siren}' , '${req.body.telephone}'  )`
+                    `'${req.body.voie}', '${req.body.ville}', '${req.body.CP}')`
                 let result = await db.promise().query(addrCreate)
-
-                const addr = `select * from entreprises where email = '${req.body.email}' `
-                result = await db.promise().query(user)
+                const addr = `select * from adresses where id = ${result[0].insertId} `
+                result = await db.promise().query(addr)
                 const toto = {
-                    token: jwt.sign({
-                            nom: result[0][0].nom,
-                            email: result[0][0].email,
-                            entreprise: true,
-                            _id: result[0][0].id
-                        },
-                            process.env.KEY_TOKEN)
+                        id: result[0][0].id,
+                        voie: result[0][0].voie,
+                        ville: result[0][0].ville,
+                        code_postal: result[0][0].code_postal
                     }
-                    res.status(200).json(toto)
+                res.status(200).json(toto)
                 
 
 

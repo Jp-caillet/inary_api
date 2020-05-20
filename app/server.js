@@ -45,6 +45,8 @@ module.exports = class Server {
         new routes.company.CompanyCreate(this.app)
         new routes.company.CompanyAuth(this.app)
 
+        new routes.adresse.AdressCreate(this.app)
+
         // If route not exist
         this.app.use((req, res) => {
             res.status(404).json({

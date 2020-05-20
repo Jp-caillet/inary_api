@@ -3,6 +3,7 @@
 const validator = require('node-validator')
 const db = require("../../db.js")
 const dotenv = require('dotenv')
+const axios = require('axios')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
@@ -14,6 +15,9 @@ const check = validator.isObject()
     .withRequired('telephone', validator.isString())
     .withRequired('email', validator.isString())
     .withRequired('mdp', validator.isString())
+    .withRequired('voie', validator.isString())
+    .withRequired('ville', validator.isString())
+    .withRequired('CP', validator.isString())
 
 module.exports = class Create {
     constructor(app) {
@@ -37,9 +41,15 @@ module.exports = class Create {
                         message: 'user already exist'
                     })
                 } else {
-                    const userCreate = `INSERT INTO entreprises (email, mdp, nom, siren, telephone)` +
+                    const tutu = await axios.post('http://localhost:4000/adresses/create', {
+                      voie: req.body.voie,
+                      ville: req.body.ville,
+                      CP: req.body.CP
+                    })
+                    
+                    const userCreate = `INSERT INTO entreprises (email, mdp, nom, siren, telephone,id_adresse)` +
                         `VALUES (` +
-                        `'${req.body.email}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}', '${req.body.nom}', '${req.body.siren}' , '${req.body.telephone}'  )`
+                        `'${req.body.email}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}', '${req.body.nom}', '${req.body.siren}' , '${req.body.telephone}',${tutu.data.id}  )`
 
                     result = await db.promise().query(userCreate)
 
