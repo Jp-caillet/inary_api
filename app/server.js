@@ -43,6 +43,7 @@ module.exports = class Server {
         new routes.user.UserShow(this.app)
 
         new routes.company.CompanyCreate(this.app)
+        new routes.company.CompanyAuth(this.app)
 
         // If route not exist
         this.app.use((req, res) => {
