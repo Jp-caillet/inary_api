@@ -6,7 +6,9 @@ const CompanyCreate = require('./company/create.js')
 const CompanyAuth = require('./company/login.js')
 
 const AdressCreate = require('./adresses/create.js')
+const AdressShow = require('./adresses/show.js')
 
+const ChallengeCreate = require('./challenge/create.js')
 
 module.exports = {
     user: {
@@ -19,6 +21,10 @@ module.exports = {
     	CompanyAuth
     },
     adresse: {
-    	AdressCreate
+    	AdressCreate,
+    	AdressShow
+    },
+    challenge: {
+    	ChallengeCreate
     }
 }

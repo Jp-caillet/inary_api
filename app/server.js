@@ -46,6 +46,10 @@ module.exports = class Server {
         new routes.company.CompanyAuth(this.app)
 
         new routes.adresse.AdressCreate(this.app)
+        new routes.adresse.AdressShow(this.app)
+
+        new routes.challenge.ChallengeCreate(this.app)
+
 
         // If route not exist
         this.app.use((req, res) => {
