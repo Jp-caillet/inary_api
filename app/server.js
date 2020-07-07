@@ -50,6 +50,8 @@ module.exports = class Server {
 
         new routes.challenge.ChallengeCreate(this.app)
 
+        new routes.auth.Login(this.app)
+
 
         // If route not exist
         this.app.use((req, res) => {

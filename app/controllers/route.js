@@ -10,6 +10,8 @@ const AdressShow = require('./adresses/show.js')
 
 const ChallengeCreate = require('./challenge/create.js')
 
+const Login = require('./auth/login.js')
+
 module.exports = {
     user: {
         UserCreate,
@@ -26,5 +28,8 @@ module.exports = {
     },
     challenge: {
     	ChallengeCreate
+    },
+    auth: {
+        Login
     }
 }

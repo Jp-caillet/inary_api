@@ -52,7 +52,7 @@ module.exports = class Create {
                 	const toto = {
                         voie:  result[0][0].voie,
                         ville: result[0][0].ville,
-                        code_postal: result[0][0].code_postal
+                        code_postal: result[0][0].code_postal 
                     }
                     res.status(200).json(toto)
                 })
