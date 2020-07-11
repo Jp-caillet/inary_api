@@ -11,6 +11,10 @@ const jwt = require('jsonwebtoken')
 const check = validator.isObject()
     .withRequired('mail', validator.isString())
     .withRequired('mdp', validator.isString())
+    .withRequired('nom', validator.isString())
+    .withRequired('prenom', validator.isString())
+    .withRequired('pseudo', validator.isString())
+    .withRequired('birthday', validator.isDate())
 
 module.exports = class Create {
     constructor(app) {
@@ -26,17 +30,26 @@ module.exports = class Create {
     middleware() {
         this.app.post('/user/create', validator.express(check), async(req, res) => {
             try {
-                const userCheck = `select * from etudiants where mail = '${req.body.mail}'`
-                let result = await db.promise().query(userCheck)
+                const entCheck = `select * from entreprises where email = '${req.body.mail}'`
+                let result = await db.promise().query(entCheck)
                 if (result[0].length !== 0) {
                     res.status(200).json({
                         code: 200,
-                        message: 'user already exist'
+                        message: 'Failed created'
+                    })
+                }
+                const userCheck = `select * from etudiants where mail = '${req.body.mail}'`
+                result = await db.promise().query(userCheck)
+                if (result[0].length !== 0) {
+                    res.status(200).json({
+                        code: 200,
+                        message: 'Failed created'
                     })
                 } else {
-                    const userCreate = `INSERT INTO etudiants (mail, mdp)` +
+                    console.log(new Date(req.body.birthday).getTime())
+                    const userCreate = `INSERT INTO etudiants (mail, mdp, nom, prenom, login, naissance)` +
                         `VALUES (` +
-                        `'${req.body.mail}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}')`
+                        `'${req.body.mail}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}', '${req.body.nom}','${req.body.prenom}','${req.body.pseudo}','${req.body.birthday}')`
 
                     result = await db.promise().query(userCreate)
 
@@ -49,11 +62,12 @@ module.exports = class Create {
                                 entreprise: false,
                                 _id: result[0][0].id
                             },
-                            process.env.KEY_TOKEN)
+                            process.env.KEY_TOKEN),
+                    entreprise: false,
+                    auth: true
                     }
                     res.status(200).json(toto)
                 }
-
 
             } catch (e) {
 
