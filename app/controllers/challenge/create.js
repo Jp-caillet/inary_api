@@ -3,23 +3,27 @@
 const validator = require('node-validator')
 const db = require("../../db.js")
 const dotenv = require('dotenv')
+const axios = require('axios')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
-const jwtDecode = require('jwt-decode')
 
 // Core
 const check = validator.isObject()
-    .withRequired('nom', validator.isString())
-    .withRequired('id_categorie', validator.isNumber())
-    .withRequired('resume', validator.isString())
-    .withRequired('salaire', validator.isString())
-    .withRequired('entretien', validator.isBoolean())
-    .withRequired('nb_entretien', validator.isNumber())
-    .withRequired('date_debut', validator.isDate())
-    .withRequired('date_fin', validator.isDate())
-    .withRequired('nb_participant', validator.isNumber())
-    .withOptional('exemple_creation', validator.isString())
+    .withRequired('brief', validator.isString())
+    .withRequired('cashPrize', validator.isNumber())
+    .withRequired('colors', validator.isArray())
+    .withRequired('debutChallenge', validator.isString())
+    .withRequired('entretiens', validator.isBoolean())
+    .withRequired('exemples', validator.isArray())
+    .withRequired('finChallenge', validator.isString())
+    .withRequired('id_type', validator.isNumber())
+    .withRequired('option', validator.isBoolean())
+    .withRequired('priceDuration', validator.isNumber())
+    .withRequired('tags', validator.isArray())
+    .withRequired('title', validator.isString())
+    .withRequired('total', validator.isNumber())
+
 
 module.exports = class Create {
     constructor(app) {
@@ -35,54 +39,100 @@ module.exports = class Create {
     middleware() {
         this.app.post('/challenge/create', validator.express(check), async(req, res) => {
             try {
+                try {
                  const token = req.headers['x-access-token']
-                if (!token) return res.status(401).send({
+                if (!token) return res.status(200).send({
                     create: false,
                     message: 'No token provided.'
                 })
                 jwt.verify(token, process.env.KEY_TOKEN, async(err) => {
-                    if (err) return res.status(500).send({
-                        shows: false,
+                    if (err) return res.status(200).send({
+                        create: false,
                         message: 'Failed to authenticate token.'
                     })
-                    const decoded = jwtDecode(token)
-                    if (! req.body.exemple_creation) {
-
-                    }
                     try {
-                    const challCreate = `INSERT INTO concours (nom, id_categorie,resume, salaire,entretien, nb_entretien, date_crea, date_debut, date_fin, nb_participant, exemple_creation, id_entreprise )` +
-                    `VALUES (` +
-                    `'${req.body.nom}', ${req.body.id_categorie}, '${req.body.resume}',`+
-                    `'${req.body.salaire}', ${req.body.entretien}, ${req.body.nb_entretien},`+
-                    `'${new Date()}', '${req.body.date_debut}', '${req.body.date_fin}',`+
-                    `${req.body.nb_participant}, '${req.body.exemple_creation}', ${decoded._id})`
 
-                    let result = await db.promise().query(challCreate)
-                    const chal = `select * from concours where id = ${result[0].insertId} `
-                    result = await db.promise().query(chal)
-                    const toto = {
-                        nom: result[0][0].nom,
-                        id_categorie: result[0][0].id_categorie,
-                        resume: result[0][0].resume,
-                        salaire: result[0][0].salaire,
-                        entretien: result[0][0].entretien,
-                        nb_entretien: result[0][0].nb_entretien,
-                        date_debut: result[0][0].date_debut,
-                        date_fin: result[0][0].date_fin,
-                        nb_participant: result[0][0].nb_participant,
-                        id_entreprise: result[0][0].id_entreprise
+                        let date_crea = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`
+                        //let date_debut = `${req.body.debutChallenge.day}/${req.body.debutChallenge.month}/${req.body.debutChallenge.year}`
+                        //let date_fin = `${req.body.finChallenge.day}/${req.body.finChallenge.month}/${req.body.finChallenge.year}`
+                        
+                        const challenge = `INSERT INTO concours (nom, id_categorie, resume, entretien, date_crea, date_debut, date_fin, nb_participant, id_entreprise, options, cashprize, priceduration, total)` +
+                        `VALUES ('${req.body.title}', '${req.body.id_type}', '${req.body.brief}', '${req.body.entretiens}', '${date_crea}', '${req.body.debutChallenge}','${req.body.finChallenge}', 0, '${req.body.id_entreprise}', '${req.body.options}', ${req.body.cashPrize}, ${req.body.priceDuration}, ${req.body.total})`
+                        let result = await db.promise().query(challenge)
+                        let id_challenge = result[0].insertId
+                        for (let i = req.body.colors.length - 1; i >= 0; i--) {
+                            let tutu = await axios.post('http://localhost:4000/couleur/create', {
+                                couleur: req.body.colors[i]
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            let toto = await axios.post('http://localhost:4000/transition/color/create', {
+                                id_color: tutu.data.id,
+                                id_concour: id_challenge
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            
+                        }
+
+                        for (let i = req.body.tags.length - 1; i >= 0; i--) {
+                            let cucu = await axios.post('http://localhost:4000/tag/create', {
+                                tag: req.body.tags[i]
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            let coco = await axios.post('http://localhost:4000/transition/tag/create', {
+                                id_tags: cucu.data.id,
+                                id_concour: id_challenge
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                        }
+
+
+                        for (let i = req.body.exemples.length - 1; i >= 0; i--) {
+                            let lulu = await axios.post('http://localhost:4000/exemple/create', {
+                                exemple: req.body.exemples[i]
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            let lolo = await axios.post('http://localhost:4000/transition/exemple/create', {
+                                id_exemple: lulu.data.id,
+                                id_concour: id_challenge
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                        }
+
+
+                        const toto = {
+                            id: result[0].insertId
+                        }
+                        res.status(200).json(toto)
+
+                    } catch (e) {
+                        console.log('create tag')
+                        console.error(`[ERROR] tag/create -> ${e}`)
+                        res.status(200).json({
+                            code: 200,
+                            message: 'Bad request'
+                        })
                     }
-                res.status(200).json(toto)
-                } catch (e) {
-
-                console.log('create user')
-                console.error(`[ERROR] user/create -> ${e}`)
+                })
+            } catch (e) {
+                console.log('create tag')
+                console.error(`[ERROR] tag/create -> ${e}`)
                 res.status(400).json({
                     code: 400,
                     message: 'Bad request'
                 })
             }
-                })
 
 
             } catch (e) {

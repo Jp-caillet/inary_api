@@ -8,6 +8,16 @@ const CompanyAuth = require('./company/login.js')
 const AdressCreate = require('./adresses/create.js')
 const AdressShow = require('./adresses/show.js')
 
+const exempleCreate = require('./exemples/create.js')
+
+const colorCreate = require('./couleurs/create.js')
+
+const transiColorCreate = require('./transition/colors/create.js')
+const transiTagCreate = require('./transition/tags/create.js')
+const transiExempleCreate = require('./transition/exemple/create.js')
+
+const tagCreate = require('./tags/create.js')
+
 const ChallengeCreate = require('./challenge/create.js')
 
 const Login = require('./auth/login.js')
@@ -31,5 +41,19 @@ module.exports = {
     },
     auth: {
         Login
+    },
+    exemple: {
+        exempleCreate
+    },
+    color: {
+        colorCreate
+    },
+    tag: {
+        tagCreate
+    },
+    transition:{
+        transiColorCreate,
+        transiTagCreate,
+        transiExempleCreate
     }
 }

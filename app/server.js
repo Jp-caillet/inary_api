@@ -48,6 +48,16 @@ module.exports = class Server {
         new routes.adresse.AdressCreate(this.app)
         new routes.adresse.AdressShow(this.app)
 
+        new routes.exemple.exempleCreate(this.app)
+
+        new routes.color.colorCreate(this.app)
+        
+        new routes.transition.transiColorCreate(this.app)
+        new routes.transition.transiTagCreate(this.app)
+        new routes.transition.transiExempleCreate(this.app)
+
+        new routes.tag.tagCreate(this.app)
+
         new routes.challenge.ChallengeCreate(this.app)
 
         new routes.auth.Login(this.app)

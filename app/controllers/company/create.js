@@ -19,6 +19,9 @@ const check = validator.isObject()
     .withRequired('ville', validator.isString())
     .withRequired('CP', validator.isString())
 
+
+    
+
 module.exports = class Create {
     constructor(app) {
         dotenv.config()
@@ -60,7 +63,7 @@ module.exports = class Create {
                         `'${req.body.mail}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}', '${req.body.nom}', '${req.body.siren}' , '${req.body.telephone}',${tutu.data.id}  )`
 
                     result = await db.promise().query(userCreate)
-                    
+
                     const user = `select * from entreprises where email = '${req.body.mail}' `
                     console.log(user[0][0])
                     const toto = {
