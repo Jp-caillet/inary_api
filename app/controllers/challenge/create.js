@@ -7,6 +7,7 @@ const axios = require('axios')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
+const jwtDecode = require('jwt-decode')
 
 // Core
 const check = validator.isObject()
@@ -51,13 +52,20 @@ module.exports = class Create {
                         message: 'Failed to authenticate token.'
                     })
                     try {
+                        const decoded = jwtDecode(token)
+                        let entretien = 0
+                        let options = 0
+                        if(req.body.entretien){
+                            entretien = 1
+                        }
+                        if(req.body.option){
+                            options = 1
+                        }
 
                         let date_crea = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`
-                        //let date_debut = `${req.body.debutChallenge.day}/${req.body.debutChallenge.month}/${req.body.debutChallenge.year}`
-                        //let date_fin = `${req.body.finChallenge.day}/${req.body.finChallenge.month}/${req.body.finChallenge.year}`
-                        
+                           
                         const challenge = `INSERT INTO concours (nom, id_categorie, resume, entretien, date_crea, date_debut, date_fin, nb_participant, id_entreprise, options, cashprize, priceduration, total)` +
-                        `VALUES ('${req.body.title}', '${req.body.id_type}', '${req.body.brief}', '${req.body.entretiens}', '${date_crea}', '${req.body.debutChallenge}','${req.body.finChallenge}', 0, '${req.body.id_entreprise}', '${req.body.options}', ${req.body.cashPrize}, ${req.body.priceDuration}, ${req.body.total})`
+                        `VALUES ('${req.body.title}', '${req.body.id_type}', '${req.body.brief}', ${req.body.entretiens}, '${date_crea}', '${req.body.debutChallenge}','${req.body.finChallenge}', 0, '${decoded._id}', ${req.body.option}, ${req.body.cashPrize}, ${req.body.priceDuration}, ${req.body.total})`
                         let result = await db.promise().query(challenge)
                         let id_challenge = result[0].insertId
                         for (let i = req.body.colors.length - 1; i >= 0; i--) {
