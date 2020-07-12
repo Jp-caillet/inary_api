@@ -59,6 +59,7 @@ module.exports = class Server {
         new routes.tag.tagCreate(this.app)
 
         new routes.challenge.ChallengeCreate(this.app)
+        new routes.challenge.ChallengeShows(this.app)
 
         new routes.auth.Login(this.app)
 

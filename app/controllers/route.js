@@ -19,6 +19,7 @@ const transiExempleCreate = require('./transition/exemple/create.js')
 const tagCreate = require('./tags/create.js')
 
 const ChallengeCreate = require('./challenge/create.js')
+const ChallengeShows = require('./challenge/shows.js')
 
 const Login = require('./auth/login.js')
 
@@ -37,7 +38,8 @@ module.exports = {
     	AdressShow
     },
     challenge: {
-    	ChallengeCreate
+    	ChallengeCreate,
+        ChallengeShows
     },
     auth: {
         Login
