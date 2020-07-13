@@ -43,6 +43,7 @@ module.exports = class Server {
         new routes.user.UserShow(this.app)
 
         new routes.company.CompanyCreate(this.app)
+        new routes.company.CompanyShow(this.app)
         new routes.company.CompanyAuth(this.app)
 
         new routes.adresse.AdressCreate(this.app)
@@ -55,6 +56,9 @@ module.exports = class Server {
         new routes.transition.transiColorCreate(this.app)
         new routes.transition.transiTagCreate(this.app)
         new routes.transition.transiExempleCreate(this.app)
+
+        new routes.participant.ParticipantNB(this.app)
+
 
         new routes.tag.tagCreate(this.app)
 

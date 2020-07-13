@@ -3,6 +3,7 @@ const UserShows = require('./user/shows.js')
 const UserShow = require('./user/show.js')
 
 const CompanyCreate = require('./company/create.js')
+const CompanyShow = require('./company/show.js')
 const CompanyAuth = require('./company/login.js')
 
 const AdressCreate = require('./adresses/create.js')
@@ -21,6 +22,8 @@ const tagCreate = require('./tags/create.js')
 const ChallengeCreate = require('./challenge/create.js')
 const ChallengeShows = require('./challenge/shows.js')
 
+const ParticipantNB = require('./participe/nbPaticipant.js')
+
 const Login = require('./auth/login.js')
 
 module.exports = {
@@ -31,6 +34,7 @@ module.exports = {
     },
     company: {
     	CompanyCreate,
+        CompanyShow,
     	CompanyAuth
     },
     adresse: {
@@ -57,5 +61,8 @@ module.exports = {
         transiColorCreate,
         transiTagCreate,
         transiExempleCreate
+    },
+    participant: {
+        ParticipantNB
     }
 }

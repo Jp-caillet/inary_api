@@ -35,20 +35,33 @@ module.exports = class Login {
                         let result = await db.promise().query(ChallengeShow)
                         let tutu = []
                         let titi
-                        console.log(result[0][0].id)
                         for (let i = result[0].length - 1; i >= 0; i--) {
-
-                          let fofo = await axios.get(`http://localhost:4000/company/show/${result[0][0].id_entreprise}`, {
+                          let fofo = await axios.get(`http://localhost:4000/company/show/${result[0][i].id_entreprise}`, {
                             headers: {
                                 'x-access-token': req.headers['x-access-token']
                             }})
-                          console.log(fofo[0][0])
-                         
+                          let nb = await axios.get(`http://localhost:4000/participe/nb/${result[0][i].id}`, {
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                          const dates = result[0][i].date_fin.split('/')
+                           const toto = {
+                              id: result[0][i].id,
+                              title: result[0][i].nom,
+                              type: result[0][i].id_categorie,
+                              company: fofo.data.nom,
+                              finChallenge: {
+                                month: dates[1],
+                                day: dates[0], 
+                                year: dates[2]
+                              },
+                              interest: 0,
+                              participants: nb.data.nb
+                          }
+                          tutu.push(toto)
                         }
-                        const toto = {
-                            id: result[0].insertId
-                        }
-                        res.status(200).json(toto)
+                        
+                        res.status(200).json(tutu)
                     } catch (e) {
                         console.log('show challenge')
                         console.error(`[ERROR] colo/show -> ${e}`)

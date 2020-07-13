@@ -20,7 +20,7 @@ module.exports = class Create {
      * Middleware
      */
     middleware() {
-        this.app.get('/company/show/:id', async(req, res) => {
+        this.app.get('/participe/nb/:id', async(req, res) => {
             try {
             	
                  const token = req.headers['x-access-token']
@@ -39,22 +39,12 @@ module.exports = class Create {
             			message: 'Not Found'
           				})
         			}
-                    const company = `select * from entreprises where id = '${req.params.id}'`
+                    const participe = `select * from participations where id_concour = '${req.params.id}'`
 
                     
-                	let result = await db.promise().query(company)
-                    if (result[0].length == 0) {
-                    return  res.status(200).json({
-                        code: 200,
-                        message: 'company not found'
-                        })
-                    } 
+                	let result = await db.promise().query(participe)
                 	const toto = {
-                        id: result[0][0].id,
-                        nom:  result[0][0].nom,
-                        siren: result[0][0].siren,
-                        id_adresse: result[0][0].id_adresse,
-                        telephone: result[0][0].telephone
+                        nb: result[0].length
                     }
                     res.status(200).json(toto)
                 })
@@ -63,7 +53,7 @@ module.exports = class Create {
             } catch (e) {
 
                 console.log('create user')
-                console.error(`[ERROR] company/show -> ${e}`)
+                console.error(`[ERROR] participe/show -> ${e}`)
                 res.status(400).json({
                     code: 400,
                     message: 'Bad request'
