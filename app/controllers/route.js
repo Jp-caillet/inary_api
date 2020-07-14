@@ -21,6 +21,7 @@ const tagCreate = require('./tags/create.js')
 
 const ChallengeCreate = require('./challenge/create.js')
 const ChallengeShows = require('./challenge/shows.js')
+const ChallengeShow = require('./challenge/show.js')
 
 const ParticipantNB = require('./participe/nbPaticipant.js')
 
@@ -43,7 +44,8 @@ module.exports = {
     },
     challenge: {
     	ChallengeCreate,
-        ChallengeShows
+        ChallengeShows,
+        ChallengeShow
     },
     auth: {
         Login
