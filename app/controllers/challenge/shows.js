@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt')
 const db = require("../../db.js")
 const axios = require('axios')
 const dotenv = require('dotenv')
+const crypto = require('crypto')
 
 module.exports = class Login {
     constructor(app) {
@@ -30,6 +31,23 @@ module.exports = class Login {
                         message: 'Failed to authenticate token.'
                     })
                     try {
+
+                        let text = "1"
+
+                        // On définit notre algorithme de cryptage
+                        let algorithm = 'aes256'
+
+                        // Notre clé de chiffrement, elle est souvent générée aléatoirement mais elle doit être la même pour le décryptage
+                        let password = process.env.KEY_TOKEN
+
+                        // On crypte notre texte
+                        
+                        // On décrypte notre texte
+                        /*
+                        let decipher = crypto.createDecipher(algorithm,password);
+                        let dec = decipher.update(crypted,'hex','utf8');
+                        dec += decipher.final('utf8');
+                        */
                         const ChallengeShow = `select * from concours`
 
                         let result = await db.promise().query(ChallengeShow)
@@ -45,6 +63,10 @@ module.exports = class Login {
                                 'x-access-token': req.headers['x-access-token']
                             }})
                           const dates = result[0][i].date_fin.split('/')
+                          let cipher = crypto.createCipher(algorithm,password)
+                          let crypted = cipher.update(result[0][i].id.toString(),'utf8','hex')
+                          crypted += cipher.final('hex')
+
                            const toto = {
                               id: result[0][i].id,
                               title: result[0][i].nom,
