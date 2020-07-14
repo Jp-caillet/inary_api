@@ -68,7 +68,7 @@ module.exports = class Login {
                           crypted += cipher.final('hex')
 
                            const toto = {
-                              id: result[0][i].id,
+                              id: crypted,
                               title: result[0][i].nom,
                               type: result[0][i].id_categorie,
                               company: fofo.data.nom,
