@@ -24,6 +24,7 @@ const ChallengeShows = require('./challenge/shows.js')
 const ChallengeShow = require('./challenge/show.js')
 
 const ParticipantNB = require('./participe/nbPaticipant.js')
+const ParticipantCreate = require('./participe/create.js')
 
 const Login = require('./auth/login.js')
 
@@ -65,6 +66,7 @@ module.exports = {
         transiExempleCreate
     },
     participant: {
-        ParticipantNB
+        ParticipantNB,
+        ParticipantCreate
     }
 }

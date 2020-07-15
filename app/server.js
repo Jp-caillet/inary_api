@@ -58,6 +58,7 @@ module.exports = class Server {
         new routes.transition.transiExempleCreate(this.app)
 
         new routes.participant.ParticipantNB(this.app)
+        new routes.participant.ParticipantCreate(this.app)
 
 
         new routes.tag.tagCreate(this.app)
