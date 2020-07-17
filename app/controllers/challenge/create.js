@@ -3,14 +3,28 @@
 const validator = require('node-validator')
 const db = require("../../db.js")
 const dotenv = require('dotenv')
+const axios = require('axios')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
+const jwtDecode = require('jwt-decode')
 
 // Core
 const check = validator.isObject()
-    .withRequired('mail', validator.isString())
-    .withRequired('mdp', validator.isString())
+    .withRequired('brief', validator.isString())
+    .withRequired('cashPrize', validator.isNumber())
+    .withRequired('colors', validator.isArray())
+    .withRequired('debutChallenge', validator.isString())
+    .withRequired('entretiens', validator.isBoolean())
+    .withRequired('exemples', validator.isArray())
+    .withRequired('finChallenge', validator.isString())
+    .withRequired('id_type', validator.isNumber())
+    .withRequired('option', validator.isBoolean())
+    .withRequired('priceDuration', validator.isNumber())
+    .withRequired('tags', validator.isArray())
+    .withRequired('title', validator.isString())
+    .withRequired('total', validator.isNumber())
+
 
 module.exports = class Create {
     constructor(app) {
@@ -26,32 +40,107 @@ module.exports = class Create {
     middleware() {
         this.app.post('/challenge/create', validator.express(check), async(req, res) => {
             try {
-                const userCheck = `select * from etudiants where mail = '${req.body.mail}'`
-                let result = await db.promise().query(userCheck)
-                if (result[0].length !== 0) {
-                    res.status(401).json({
-                        code: 401,
-                        message: 'user already exist'
+                try {
+                 const token = req.headers['x-access-token']
+                if (!token) return res.status(200).send({
+                    create: false,
+                    message: 'No token provided.'
+                })
+                jwt.verify(token, process.env.KEY_TOKEN, async(err) => {
+                    if (err) return res.status(200).send({
+                        create: false,
+                        message: 'Failed to authenticate token.'
                     })
-                } else {
-                    const userCreate = `INSERT INTO etudiants (mail, mdp)` +
-                        `VALUES (` +
-                        `'${req.body.mail}', '${bcrypt.hashSync(req.body.mdp, saltRounds)}')`
+                    try {
+                        const decoded = jwtDecode(token)
+                        let entretien = 0
+                        let options = 0
+                        if(req.body.entretien){
+                            entretien = 1
+                        }
+                        if(req.body.option){
+                            options = 1
+                        }
 
-                    result = await db.promise().query(userCreate)
+                        let date_crea = `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`
+                           
+                        const challenge = `INSERT INTO concours (nom, id_categorie, resume, entretien, date_crea, date_debut, date_fin, nb_participant, id_entreprise, options, cashprize, priceduration, total)` +
+                        `VALUES ('${req.body.title}', '${req.body.id_type}', '${req.body.brief}', ${req.body.entretiens}, '${date_crea}', '${req.body.debutChallenge}','${req.body.finChallenge}', 0, '${decoded._id}', ${req.body.option}, ${req.body.cashPrize}, ${req.body.priceDuration}, ${req.body.total})`
+                        let result = await db.promise().query(challenge)
+                        let id_challenge = result[0].insertId
+                        for (let i = req.body.colors.length - 1; i >= 0; i--) {
+                            let tutu = await axios.post('http://localhost:4000/couleur/create', {
+                                couleur: req.body.colors[i]
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            let toto = await axios.post('http://localhost:4000/transition/color/create', {
+                                id_color: tutu.data.id,
+                                id_concour: id_challenge
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            
+                        }
 
-                    const user = `select * from etudiants where mail = '${req.body.mail}' `
-                    result = await db.promise().query(user)
-                    const toto = {
-                        token: jwt.sign({
-                                mail: result[0][0].mail,
-                                mdp: result[0][0].mdp,
-                                _id: result[0][0].id
-                            },
-                            process.env.KEY_TOKEN)
+                        for (let i = req.body.tags.length - 1; i >= 0; i--) {
+                            let cucu = await axios.post('http://localhost:4000/tag/create', {
+                                tag: req.body.tags[i]
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            let coco = await axios.post('http://localhost:4000/transition/tag/create', {
+                                id_tags: cucu.data.id,
+                                id_concour: id_challenge
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                        }
+
+
+                        for (let i = req.body.exemples.length - 1; i >= 0; i--) {
+                            let lulu = await axios.post('http://localhost:4000/exemple/create', {
+                                exemple: req.body.exemples[i]
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                            let lolo = await axios.post('http://localhost:4000/transition/exemple/create', {
+                                id_exemple: lulu.data.id,
+                                id_concour: id_challenge
+                            },{
+                            headers: {
+                                'x-access-token': req.headers['x-access-token']
+                            }})
+                        }
+
+
+                        const toto = {
+                            id: result[0].insertId
+                        }
+                        res.status(200).json(toto)
+
+                    } catch (e) {
+                        console.log('create tag')
+                        console.error(`[ERROR] tag/create -> ${e}`)
+                        res.status(200).json({
+                            code: 200,
+                            message: 'Bad request'
+                        })
                     }
-                    res.status(200).json(toto)
-                }
+                })
+            } catch (e) {
+                console.log('create tag')
+                console.error(`[ERROR] tag/create -> ${e}`)
+                res.status(400).json({
+                    code: 400,
+                    message: 'Bad request'
+                })
+            }
 
 
             } catch (e) {

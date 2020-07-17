@@ -42,6 +42,34 @@ module.exports = class Server {
         new routes.user.UserShows(this.app)
         new routes.user.UserShow(this.app)
 
+        new routes.company.CompanyCreate(this.app)
+        new routes.company.CompanyShow(this.app)
+        new routes.company.CompanyAuth(this.app)
+
+        new routes.adresse.AdressCreate(this.app)
+        new routes.adresse.AdressShow(this.app)
+
+        new routes.exemple.exempleCreate(this.app)
+
+        new routes.color.colorCreate(this.app)
+        
+        new routes.transition.transiColorCreate(this.app)
+        new routes.transition.transiTagCreate(this.app)
+        new routes.transition.transiExempleCreate(this.app)
+
+        new routes.participant.ParticipantNB(this.app)
+        new routes.participant.ParticipantCreate(this.app)
+
+
+        new routes.tag.tagCreate(this.app)
+
+        new routes.challenge.ChallengeCreate(this.app)
+        new routes.challenge.ChallengeShows(this.app)
+        new routes.challenge.ChallengeShow(this.app)
+
+        new routes.auth.Login(this.app)
+
+
         // If route not exist
         this.app.use((req, res) => {
             res.status(404).json({
