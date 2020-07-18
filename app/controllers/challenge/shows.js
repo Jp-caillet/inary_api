@@ -48,7 +48,7 @@ module.exports = class Login {
                         let dec = decipher.update(crypted,'hex','utf8');
                         dec += decipher.final('utf8');
                         */
-                        const ChallengeShow = `select * from concours`
+                        const ChallengeShow = `select * from concours where end= '0'`
 
                         let result = await db.promise().query(ChallengeShow)
                         let tutu = []
