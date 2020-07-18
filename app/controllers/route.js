@@ -28,6 +28,7 @@ const ParticipantCreate = require('./participe/create.js')
 
 const SelectionShows = require('./selection/shows.js')
 const SelectionFinal = require('./selection/final.js')
+const SelectionWinner = require('./selection/winner.js')
 
 const Login = require('./auth/login.js')
 
@@ -74,6 +75,7 @@ module.exports = {
     },
     selection: {
         SelectionShows,
-        SelectionFinal
+        SelectionFinal,
+        SelectionWinner
     }
 }

@@ -22,15 +22,16 @@ module.exports = class Show {
      * Middleware
      */
     middleware() {
-        this.app.get('/user/show', async(req, res) => {
-            try {
-                if (!req.query.id) {
-                    return res.status(404).json({
-                        code: 404,
-                        message: 'missing params'
-                    })
-                }
-                const userCheck = `select * from etudiants where id=${req.query.id}`
+        this.app.get('/user/show/:id', async(req, res) => {
+         try {
+                 const token = req.headers['x-access-token']
+                if (!token) return res.status(200).send({
+                    final: false,
+                    message: 'No token provided.'
+                })
+                jwt.verify(token, process.env.KEY_TOKEN, async(err) => { 
+
+                const userCheck = `select * from etudiants where id=${req.params.id}`
                 let result = await db.promise().query(userCheck)
                 if (result[0].length == 0) {
                     return res.status(401).json({
@@ -39,23 +40,25 @@ module.exports = class Show {
                     })
                 }
                 let toto = []
-                for (var i = 0; i <= result[0].length - 1; i++) {
-                    let user = {
-                        id: result[0][i].id,
-                        nom: result[0][i].nom,
-                        prenom: result[0][i].prenom,
-                        naissance: result[0][i].naissance,
-                        login: result[0][i].login,
-                        mail: result[0][i].mail,
-                        telephone: result[0][i].telephone
-                    }
-                    toto[i] = user
+               
+                let user = {
+                    nom: result[0][0].nom,
+                    prenom: result[0][0].prenom,
+                    naissance: result[0][0].naissance,
+                    login: result[0][0].login,
+                    mail: result[0][0].mail,
+                    telephone: result[0][0].telephone
                 }
-                res.status(200).json(toto)
+                res.status(200).json(user)
+                    if (err) return res.status(200).send({
+                        final: false,
+                        message: 'Failed to authenticate token.'
+                    })
+                   
+                })
             } catch (e) {
-
-                console.log('show user')
-                console.error(`[ERROR] user/show -> ${e}`)
+                console.log('create participe')
+                console.error(`[ERROR] participe/create -> ${e}`)
                 res.status(400).json({
                     code: 400,
                     message: 'Bad request'

@@ -69,6 +69,7 @@ module.exports = class Server {
 
         new routes.selection.SelectionShows(this.app)
         new routes.selection.SelectionFinal(this.app)
+        new routes.selection.SelectionWinner(this.app)
 
         new routes.auth.Login(this.app)
 
