@@ -26,6 +26,8 @@ const ChallengeShow = require('./challenge/show.js')
 const ParticipantNB = require('./participe/nbPaticipant.js')
 const ParticipantCreate = require('./participe/create.js')
 
+const SelectionShows = require('./selection/shows.js')
+
 const Login = require('./auth/login.js')
 
 module.exports = {
@@ -68,5 +70,8 @@ module.exports = {
     participant: {
         ParticipantNB,
         ParticipantCreate
+    },
+    selection: {
+        SelectionShows
     }
 }

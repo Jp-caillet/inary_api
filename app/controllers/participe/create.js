@@ -13,6 +13,8 @@ const crypto = require('crypto')
 const check = validator.isObject()
     .withRequired('idConcour', validator.isString())
     .withRequired('isEntreprise', validator.isBoolean())
+    .withRequired('src', validator.isString())
+
 
 
 
@@ -59,8 +61,8 @@ module.exports = class ParticipeCreate {
                         		participe: false
                     		})
                     	}
-                        const exempleCreate = `INSERT INTO participations (id_concour, id_etudiant,  final)` +
-                        `VALUES (${dec}, ${decoded._id}, 0 )`
+                        const exempleCreate = `INSERT INTO participations (id_concour, id_etudiant,  final, src)` +
+                        `VALUES (${dec}, ${decoded._id}, 0, '${req.body.src}' )`
 
                         let result = await db.promise().query(exempleCreate)
                         const toto = {
@@ -74,7 +76,8 @@ module.exports = class ParticipeCreate {
                         console.error(`[ERROR] participe/create -> ${e}`)
                         res.status(200).json({
                             code: 200,
-                            message: 'Bad request'
+                            message: 'Bad request',
+                            participe: false
                         })
                     }
                 })

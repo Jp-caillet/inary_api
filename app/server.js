@@ -67,6 +67,8 @@ module.exports = class Server {
         new routes.challenge.ChallengeShows(this.app)
         new routes.challenge.ChallengeShow(this.app)
 
+        new routes.selection.SelectionShows(this.app)
+
         new routes.auth.Login(this.app)
 
 
