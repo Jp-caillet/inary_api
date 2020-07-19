@@ -75,7 +75,8 @@ module.exports = class Create {
                             },
                             process.env.KEY_TOKEN),
                     entreprise: true,
-                    auth: true
+                    auth: true,
+                    name: user[0][0].nom
                     }
                     res.status(200).json(toto)
                 }
