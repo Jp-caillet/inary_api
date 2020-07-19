@@ -42,11 +42,13 @@ module.exports = class Server {
         new routes.user.UserShows(this.app)
         new routes.user.UserShow(this.app)
         new routes.user.UserMe(this.app)
+        new routes.user.UserChall(this.app)
 
         new routes.company.CompanyCreate(this.app)
         new routes.company.CompanyShow(this.app)
         new routes.company.CompanyAuth(this.app)
         new routes.company.CompanyMe(this.app)
+        new routes.company.CompanyChall(this.app)
 
         new routes.adresse.AdressCreate(this.app)
         new routes.adresse.AdressShow(this.app)

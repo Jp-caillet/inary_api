@@ -2,11 +2,13 @@ const UserCreate = require('./user/create.js')
 const UserShows = require('./user/shows.js')
 const UserShow = require('./user/show.js')
 const UserMe = require('./user/me.js')
+const UserChall = require('./user/challenge.js')
 
 const CompanyCreate = require('./company/create.js')
 const CompanyShow = require('./company/show.js')
 const CompanyAuth = require('./company/login.js')
 const CompanyMe = require('./company/me.js')
+const CompanyChall = require('./company/challenge.js')
 
 const AdressCreate = require('./adresses/create.js')
 const AdressShow = require('./adresses/show.js')
@@ -39,13 +41,15 @@ module.exports = {
         UserCreate,
         UserShows,
         UserShow,
-        UserMe
+        UserMe,
+        UserChall
     },
     company: {
     	CompanyCreate,
         CompanyShow,
     	CompanyAuth,
-        CompanyMe
+        CompanyMe,
+        CompanyChall
     },
     adresse: {
     	AdressCreate,
