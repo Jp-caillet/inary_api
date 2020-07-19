@@ -47,7 +47,6 @@ module.exports = class Login {
 
 
                         const test = `select * from participations where id_etudiant = ${decoded._id}`
-                        console.log(decoded._id)
                         let result1 = await db.promise().query(test)
                         // On crypte notre texte
                         
@@ -64,6 +63,7 @@ module.exports = class Login {
                         	 const ChallengeShow = `select * from concours where id = ${result1[0][i].id_concour}`
 
 	                        let result = await db.promise().query(ChallengeShow)
+
 	                        let titi
 	                        
 	                          let fofo = await axios.get(`http://localhost:4000/company/show/${result[0][0].id_entreprise}`, {
@@ -74,15 +74,16 @@ module.exports = class Login {
 	                            headers: {
 	                                'x-access-token': req.headers['x-access-token']
 	                            }})
-	                          const dates = result[0][i].date_fin.split('/')
+
+	                          const dates = result[0][0].date_fin.split('/')
 	                          let cipher = crypto.createCipher(algorithm,password)
-	                          let crypted = cipher.update(result[0][i].id.toString(),'utf8','hex')
+	                          let crypted = cipher.update(result[0][0].id.toString(),'utf8','hex')
 	                          crypted += cipher.final('hex')
 
 	                           const toto = {
 	                              id: crypted,
-	                              title: result[0][i].nom,
-	                              type: result[0][i].id_categorie,
+	                              title: result[0][0].nom,
+	                              type: result[0][0].id_categorie,
 	                              company: fofo.data.nom,
 	                              finChallenge: {
 	                                month: dates[1],
