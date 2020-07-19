@@ -65,18 +65,18 @@ module.exports = class Create {
                     result = await db.promise().query(userCreate)
 
                     const user = `select * from entreprises where email = '${req.body.mail}' `
-                    console.log(user[0][0])
+                    let user1 = await db.promise().query(user)
                     const toto = {
                         token: jwt.sign({
                                 nom: user[0][0].nom,
                                 email: user[0][0].email,
                                 entreprise: true,
-                                _id: user[0][0].id
+                                _id: user1[0][0].id
                             },
                             process.env.KEY_TOKEN),
                     entreprise: true,
                     auth: true,
-                    name: user[0][0].nom
+                    name: user1[0][0].nom
                     }
                     res.status(200).json(toto)
                 }
