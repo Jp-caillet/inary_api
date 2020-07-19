@@ -1,10 +1,14 @@
 const UserCreate = require('./user/create.js')
 const UserShows = require('./user/shows.js')
 const UserShow = require('./user/show.js')
+const UserMe = require('./user/me.js')
+const UserChall = require('./user/challenge.js')
 
 const CompanyCreate = require('./company/create.js')
 const CompanyShow = require('./company/show.js')
 const CompanyAuth = require('./company/login.js')
+const CompanyMe = require('./company/me.js')
+const CompanyChall = require('./company/challenge.js')
 
 const AdressCreate = require('./adresses/create.js')
 const AdressShow = require('./adresses/show.js')
@@ -26,18 +30,26 @@ const ChallengeShow = require('./challenge/show.js')
 const ParticipantNB = require('./participe/nbPaticipant.js')
 const ParticipantCreate = require('./participe/create.js')
 
+const SelectionShows = require('./selection/shows.js')
+const SelectionFinal = require('./selection/final.js')
+const SelectionWinner = require('./selection/winner.js')
+
 const Login = require('./auth/login.js')
 
 module.exports = {
     user: {
         UserCreate,
         UserShows,
-        UserShow
+        UserShow,
+        UserMe,
+        UserChall
     },
     company: {
     	CompanyCreate,
         CompanyShow,
-    	CompanyAuth
+    	CompanyAuth,
+        CompanyMe,
+        CompanyChall
     },
     adresse: {
     	AdressCreate,
@@ -68,5 +80,10 @@ module.exports = {
     participant: {
         ParticipantNB,
         ParticipantCreate
+    },
+    selection: {
+        SelectionShows,
+        SelectionFinal,
+        SelectionWinner
     }
 }

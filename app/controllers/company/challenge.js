@@ -7,6 +7,8 @@ const db = require("../../db.js")
 const axios = require('axios')
 const dotenv = require('dotenv')
 const crypto = require('crypto')
+const jwtDecode = require('jwt-decode')
+
 
 module.exports = class Login {
     constructor(app) {
@@ -18,7 +20,7 @@ module.exports = class Login {
      * Middleware
      */
     middleware() {
-        this.app.get('/projets', async(req, res) => {
+        this.app.get('/company/projets', async(req, res) => {
              try {
                  const token = req.headers['x-access-token']
                 if (!token) return res.status(200).send({
@@ -31,6 +33,9 @@ module.exports = class Login {
                         message: 'Failed to authenticate token.'
                     })
                     try {
+                    	jwt.verify(token, process.env.KEY_TOKEN, async(err) => { 
+
+                		const decoded = jwtDecode(token)
 
                         let text = "1"
 
@@ -48,7 +53,7 @@ module.exports = class Login {
                         let dec = decipher.update(crypted,'hex','utf8');
                         dec += decipher.final('utf8');
                         */
-                        const ChallengeShow = `select * from concours where end= '0'`
+                        const ChallengeShow = `select * from concours where id_entreprise = ${decoded._id}`
 
                         let result = await db.promise().query(ChallengeShow)
                         let tutu = []
@@ -84,7 +89,7 @@ module.exports = class Login {
                         }
                         
                         res.status(200).json(tutu)
-                    } catch (e) {
+                    })} catch (e) {
                         console.log('show challenge')
                         console.error(`[ERROR] colo/show -> ${e}`)
                         res.status(200).json({
