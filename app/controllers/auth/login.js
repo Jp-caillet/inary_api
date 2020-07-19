@@ -30,14 +30,17 @@ module.exports = class Login {
                 let entrepriseCheck = `select * from entreprises where email = '${req.body.email}'`
                 let result = await db.promise().query(entrepriseCheck)
                 let user = result[0][0]
+                let name
                 if(result[0].length === 0){
                 	 entrepriseCheck = `select * from etudiants where mail = '${req.body.email}'`
                 	 result = await db.promise().query(entrepriseCheck)
                 	 user = result[0][0]
                 	 boolEntreprise = false
-                }
-                
+                     name = result[0][0].login
 
+                }else{
+                    name = result[0][0].nom
+                }
 
                 if (result[0].length === 0) {
                     return res.status(200).json({
@@ -61,6 +64,7 @@ module.exports = class Login {
                         _id: result[0][0].id
                     }, process.env.KEY_TOKEN),
                     entreprise: boolEntreprise,
+                    name: name,
                     auth: true
                 })
             } catch (e) {
